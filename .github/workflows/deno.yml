@@ -62,6 +62,9 @@ jobs:
         with:
           deno-version: v2.x
 
+      - name: Install
+        run: deno install
+
       - name: Build
         run: deno task build
 
