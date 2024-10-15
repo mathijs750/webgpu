@@ -1,7 +1,7 @@
 import { defineConfig } from "vite";
 
 export default defineConfig({
-  base: "/webgpu/",
+  base: "https://mathijs750.github.io/webgpu/",
   build: {
     target: "chrome89",
   },
