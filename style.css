@@ -3,16 +3,19 @@
   line-height: 1.5;
   font-weight: 400;
 
+  --color-light: hsl(28, 56%, 87%);
+  --color-dark: hsl(150, 10%, 10%);
+
+  accent-color: var(--color-light);
   color-scheme: light dark;
-  color: hsl(28, 56%, 87%);
-  background-color: hsl(150, 10%, 10%);
+  color: var(--color-light);
+  background-color: var(--color-dark);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-html,
 body {
   width: 100vw;
   height: 100vh;
@@ -26,9 +29,22 @@ section {
   gap: 1ch;
 }
 
+canvas {
+  width: min(80vw, 512px);
+}
+
+dialog {
+  border: 2px var(--color-light) solid;
+  color: var(--color-light);
+  border-radius: 1rem;
+  width: min(calc(80vw - 8rem), 450px);
+  padding: 3rem 4rem;
+  align-self: center;
+}
+
 @media (prefers-color-scheme: light) {
   :root {
-    color: hsl(150, 10%, 10%);
-    background-color: hsl(28, 56%, 87%);
+    --color-light: hsl(150, 10%, 10%);
+    --color-dark: hsl(28, 56%, 87%);
   }
 }

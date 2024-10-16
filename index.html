@@ -9,7 +9,22 @@
   <body>
     <section>
       <canvas width="512" height="512"></canvas>
+      <dialog id="webgpuDialog">
+        <h1>Darn! WebGPU Not supported!</h1>
+        <p>
+          It seems like your browser can't handle WebGPU just yet 🥲 Don't
+          worry, your device is still awesome!
+        </p>
+      </dialog>
+      <dialog id="adapterDialog">
+        <h1>Drat! No GPUAdapter found!</h1>
+        <p>
+          It seems like your device's GPU does not support al the features for
+          webGPU 😣
+        </p>
+      </dialog>
     </section>
+
     <script type="module" src="/main.js"></script>
   </body>
 </html>

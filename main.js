@@ -1,18 +1,24 @@
 import "./style.css";
 // Setup plumbing
-const canvas = document.querySelector("canvas");
+const webgpuDialog = document.getElementById("webgpuDialog");
+const adapterDialog = document.getElementById("adapterDialog");
+
 
 if (!navigator.gpu) {
+  webgpuDialog.show()
   throw new Error("WebGPU not supported on this browser.");
+  
 }
 
 const adapter = await navigator.gpu.requestAdapter();
 if (!adapter) {
-  throw new Error("No appropriate GPUAdapter found.");
+  adapterDialog.show()
+  throw new Error("No appropriate GPU Adapter found.");
 }
 
 const device = await adapter.requestDevice();
 
+const canvas = document.querySelector("canvas");
 const context = canvas.getContext("webgpu");
 const canvasFormat = navigator.gpu.getPreferredCanvasFormat();
 context.configure({
