@@ -208,6 +208,7 @@
   "workspace": {
     "packageJson": {
       "dependencies": [
+        "npm:@webgpu/types@~0.1.49",
         "npm:vite@^5.4.8"
       ]
     }

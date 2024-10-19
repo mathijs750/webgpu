@@ -5,4 +5,7 @@ export default defineConfig({
   build: {
     target: "esnext",
   },
+  compilerOptions: {
+    types: ["@webgpu/types"],
+  },
 });
