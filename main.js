@@ -25,7 +25,7 @@ context.configure({
 });
 
 // WebGPU stuff
-const GRID_SIZE = 32;
+const GRID_SIZE = 9;
 const WORKGROUP_SIZE = 8;
 const UPDATE_INTERVAL = 200; // Update every 200ms (5 times/sec)
 let step = 0;
@@ -208,17 +208,12 @@ const cellStateStorage = [
   }),
 ];
 
-// Mark every third cell of the first grid as active.
-for (let i = 0; i < cellStateArray.length; i += 3) {
-  cellStateArray[i] = 1;
+// Set each cell to a random state, then copy the JavaScript array
+// into the storage buffer.
+for (let i = 0; i < cellStateArray.length; ++i) {
+  cellStateArray[i] = Math.random() > 0.6 ? 1 : 0;
 }
 device.queue.writeBuffer(cellStateStorage[0], 0, cellStateArray);
-
-// Mark every other cell of the second grid as active.
-for (let i = 0; i < cellStateArray.length; i++) {
-  cellStateArray[i] = i % 2;
-}
-device.queue.writeBuffer(cellStateStorage[1], 0, cellStateArray);
 
 const bindGroups = [
   device.createBindGroup({
