@@ -135,30 +135,55 @@ device.queue.writeBuffer(uniformBuffer, 0, uniformArray);
 const cellStateArray = new Uint32Array(GRID_SIZE * GRID_SIZE);
 
 // Create a storage buffer to hold the cell state.
-const cellStateStorage = device.createBuffer({
-  label: "Cell State",
-  size: cellStateArray.byteLength,
-  usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST,
-});
+const cellStateStorage = [
+  device.createBuffer({
+    label: "Cell State A",
+    size: cellStateArray.byteLength,
+    usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST,
+  }),
+  device.createBuffer({
+    label: "Cell State B",
+    size: cellStateArray.byteLength,
+    usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST,
+  }),
+];
 
-// Mark every third cell of the grid as active.
+// Mark every third cell of the first grid as active.
 for (let i = 0; i < cellStateArray.length; i += 3) {
   cellStateArray[i] = 1;
 }
-device.queue.writeBuffer(cellStateStorage, 0, cellStateArray);
+device.queue.writeBuffer(cellStateStorage[0], 0, cellStateArray);
 
-// > Alles wat de shader nodig heeft?
-const bindGroup = device.createBindGroup({
-  label: "Cell renderer bind group",
-  layout: cellPipeline.getBindGroupLayout(0),
-  entries: [{
-    binding: 0,
-    resource: { buffer: uniformBuffer },
-  }, {
-    binding: 1,
-    resource: { buffer: cellStateStorage },
-  }],
-});
+// Mark every other cell of the second grid as active.
+for (let i = 0; i < cellStateArray.length; i++) {
+  cellStateArray[i] = i % 2;
+}
+device.queue.writeBuffer(cellStateStorage[1], 0, cellStateArray);
+
+const bindGroups = [
+  device.createBindGroup({
+    label: "Cell renderer bind group A",
+    layout: cellPipeline.getBindGroupLayout(0),
+    entries: [{
+      binding: 0,
+      resource: { buffer: uniformBuffer },
+    }, {
+      binding: 1,
+      resource: { buffer: cellStateStorage[0] },
+    }],
+  }),
+  device.createBindGroup({
+    label: "Cell renderer bind group B",
+    layout: cellPipeline.getBindGroupLayout(0),
+    entries: [{
+      binding: 0,
+      resource: { buffer: uniformBuffer },
+    }, {
+      binding: 1,
+      resource: { buffer: cellStateStorage[1] },
+    }],
+  }),
+];
 
 const encoder = device.createCommandEncoder();
 
