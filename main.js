@@ -26,6 +26,8 @@ context.configure({
 
 // WebGPU stuff
 const GRID_SIZE = 32;
+const UPDATE_INTERVAL = 200; // Update every 200ms (5 times/sec)
+let step = 0;
 
 const vertices = new Float32Array([
   -0.8,
@@ -185,26 +187,29 @@ const bindGroups = [
   }),
 ];
 
-const encoder = device.createCommandEncoder();
+function updateGrid() {
+  step++;
 
-const pass = encoder.beginRenderPass({
-  colorAttachments: [
-    {
-      view: context.getCurrentTexture().createView(),
-      loadOp: "clear",
-      clearValue: { r: 0, g: 0.14, b: 0.12, a: 1 },
-      storeOp: "store",
-    },
-  ],
-});
+  const encoder = device.createCommandEncoder();
 
-pass.setPipeline(cellPipeline);
-pass.setVertexBuffer(0, vertexBuffer);
+  const pass = encoder.beginRenderPass({
+    colorAttachments: [
+      {
+        view: context.getCurrentTexture().createView(),
+        loadOp: "clear",
+        clearValue: { r: 0, g: 0.14, b: 0.12, a: 1 },
+        storeOp: "store",
+      },
+    ],
+  });
 
-pass.setBindGroup(0, bindGroup);
+  pass.setPipeline(cellPipeline);
+  pass.setBindGroup(0, bindGroups[step % 2]);
+  pass.setVertexBuffer(0, vertexBuffer);
+  pass.draw(vertices.length / 2, GRID_SIZE * GRID_SIZE);
 
-pass.draw(vertices.length / 2, GRID_SIZE * GRID_SIZE);
+  pass.end();
+  device.queue.submit([encoder.finish()]);
+}
 
-pass.end();
-// Finish the command buffer and immediately submit it.
-device.queue.submit([encoder.finish()]);
+setInterval(updateGrid, UPDATE_INTERVAL);
