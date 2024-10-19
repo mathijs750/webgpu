@@ -164,7 +164,7 @@ const simulationShaderModule = device.createShaderModule({
 
     fn cellActive(x: u32, y: u32) -> u32 {
       return cellStateIn[cellIndex(vec2(x, y))];
-    }
+    }   
 
     @compute @workgroup_size(${WORKGROUP_SIZE}, ${WORKGROUP_SIZE}) 
     fn computeMain(@builtin(global_invocation_id) cell: vec3u) {
@@ -191,7 +191,7 @@ const simulationShaderModule = device.createShaderModule({
         default: { // Cells with < 2 or > 3 neighbors become inactive.
           cellStateOut[i] = 0;
         }
-      }
+      }                     
     }
   `,
 });
