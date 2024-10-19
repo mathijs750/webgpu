@@ -25,7 +25,7 @@ context.configure({
 });
 
 // WebGPU stuff
-const GRID_SIZE = 9;
+const GRID_SIZE = 32;
 const WORKGROUP_SIZE = 8;
 const UPDATE_INTERVAL = 200; // Update every 200ms (5 times/sec)
 let step = 0;
@@ -52,7 +52,7 @@ const vertexBuffer = device.createBuffer({
   usage: GPUBufferUsage.VERTEX | GPUBufferUsage.COPY_DST,
 });
 
-device.queue.writeBuffer(vertexBuffer, /*bufferOffset=*/ 0, vertices);
+device.queue.writeBuffer(vertexBuffer, 0, vertices);
 
 const vertexBufferLayout = {
   arrayStride: 8,
