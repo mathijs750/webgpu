@@ -68,12 +68,12 @@ const cellShaderModule = device.createShaderModule({
   label: "Cell shader",
   code: /* wgsl */ `
     struct VertexInput {
-      @location(0) pos: vec2f,
+      @location(0) position: vec2f,
       @builtin(instance_index) instance: u32,
     };
 
     struct VertexOutput {
-      @builtin(position) pos: vec4f,
+      @builtin(position) position: vec4f,
       @location(0) cell: vec2f,
     };
 
@@ -82,24 +82,23 @@ const cellShaderModule = device.createShaderModule({
 
     @vertex
     fn vertexMain(input: VertexInput) -> VertexOutput {
-
-      let i = f32(input.instance); // Save the instance_index as a float
-      let cell = vec2f(i % grid.x, floor(i / grid.x));
-      let state = f32(cellState[input.instance]);
-
-      let cellOffset = cell / grid * 2;
-      let gridPos = (input.pos * state + 1) / grid - 1 + cellOffset;
-
       var output: VertexOutput;
-      output.pos = vec4f(gridPos, 0, 1);
-      output.cell = cell;
+
+      let i = f32(input.instance);
+      let cell = vec2f(i % grid.x, floor(i / grid.x));
+
+      let scale = f32(cellState[input.instance]);
+      let cellOffset = cell / grid * 2;
+      let gridPos = (input.position * scale + 1) / grid - 1 + cellOffset;
+
+      output.position = vec4f(gridPos, 0, 1);
+      output.cell = cell / grid;
       return output;
     }
 
     @fragment
     fn fragmentMain(input: VertexOutput) -> @location(0) vec4f {
-      let c = input.cell / grid;
-      return vec4f(c, 1 - c.x, 1);    
+      return vec4f(input.cell, 1.0 - input.cell.x, 1);
     }
   `,
 });
